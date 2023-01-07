@@ -1,11 +1,20 @@
+import { Repeat } from 'typescript-tuple'
 import { useState } from 'react';
 import '../styles.css';
 
-function Square({ value, onSquareClick }) {
+type SquareValue = 'O' | 'X' | null
+
+type SquareProps = {
+  value: SquareValue
+  onSquareClick: () => void
+}
+
+function Square(props: SquareProps) {
+  const { value, onSquareClick } = props
   return <button className="square" onClick={onSquareClick}>{ value }</button>;
 }
 
-function calculateWinner(squares) {
+function calculateWinner(squares: BoardState) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -26,8 +35,17 @@ function calculateWinner(squares) {
   return null
 }
 
-function Board({ xIsNext, squares, onPlay }) {
-  function handleClick(i) {
+type BoardState = Repeat<SquareValue, 9>
+
+type BoardProps = {
+  xIsNext: boolean
+  squares: BoardState
+  onPlay: (nextSquares: BoardState) => void
+}
+
+function Board(props: BoardProps) {
+  const { xIsNext, squares, onPlay } = props
+  function handleClick(i: number) {
     if(squares[i] || calculateWinner(squares)) {
       return
     }
@@ -39,7 +57,7 @@ function Board({ xIsNext, squares, onPlay }) {
     } else {
       nextSquares[i] = "O"
     }
-    onPlay(nextSquares)
+    onPlay(nextSquares as BoardState)
   }
 
   const winner = calculateWinner(squares)
@@ -73,25 +91,23 @@ function Board({ xIsNext, squares, onPlay }) {
 }
 
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)])
-  const [currentMove, setCurrentMove] = useState(0)
-  const xIsNext = currentMove % 2 === 0
-  const currentSquares = history[currentMove]
+  const [history, setHistory] = useState<BoardState[]>([[null, null, null, null, null, null, null, null, null]])
+  const [currentMove, setCurrentMove] = useState<number>(0)
+  const xIsNext: boolean = currentMove % 2 === 0
+  const currentSquares: BoardState = history[currentMove]
 
-  function handlePlay(nextSquares) {
+  function handlePlay(nextSquares: BoardState) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares]
-    console.log('currentMove', currentMove)
-    console.log('...history.slice(0, currentMove + 1)', ...history.slice(0, currentMove))
     setHistory(nextHistory)
     setCurrentMove(nextHistory.length - 1)
   }
 
-  function jumpTo(nextMove) {
+  function jumpTo(nextMove: number) {
     setCurrentMove(nextMove)
   }
 
   const moves = history.map((squares, move) => {
-    let description;
+    let description: string;
     if(move > 0) {
       description = 'Go to move #' + move
     } else {
