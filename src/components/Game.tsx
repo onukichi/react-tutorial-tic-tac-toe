@@ -119,7 +119,6 @@ export default function Game() {
       </li>
     )
   });
-  console.log(moves)
 
   return (
     <div className="game">
