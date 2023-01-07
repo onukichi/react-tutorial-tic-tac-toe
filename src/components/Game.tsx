@@ -72,9 +72,9 @@ function Board(props: BoardProps) {
   for(let i = 0; i < 3; i++) {
     const row = []
     for(let j = 0; j < 3; j++) {
-      row.push(<Square value={squares[i * 3 + j]} onSquareClick={() => handleClick(i * 3 + j)} />)
+      row.push(<Square key={i * 3 + j} value={squares[i * 3 + j]} onSquareClick={() => handleClick(i * 3 + j)} />)
     }
-    boardView.push(<div className="board-row">{row}</div>)
+    boardView.push(<div key={i} className="board-row">{row}</div>)
   }
 
   return (
