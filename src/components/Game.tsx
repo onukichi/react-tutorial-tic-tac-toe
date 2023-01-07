@@ -88,6 +88,7 @@ function Board(props: BoardProps) {
 export default function Game() {
   const [history, setHistory] = useState<BoardState[]>([[null, null, null, null, null, null, null, null, null]])
   const [currentMove, setCurrentMove] = useState<number>(0)
+  const [isAsc, setIsAsc] = useState<boolean>(true)
   const xIsNext: boolean = currentMove % 2 === 0
   const currentSquares: BoardState = history[currentMove]
 
@@ -118,6 +119,7 @@ export default function Game() {
       </li>
     )
   });
+  console.log(moves)
 
   return (
     <div className="game">
@@ -125,7 +127,8 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{ moves }</ol>
+        <button onClick={() => setIsAsc(!isAsc)}>{ isAsc ? 'Asc' : 'Desc' }</button>
+        <ol>{ isAsc ? moves : moves.reverse() }</ol>
       </div>
     </div>
   )
