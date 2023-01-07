@@ -128,7 +128,7 @@ export default function Game() {
       </div>
       <div className="game-info">
         <button onClick={() => setIsAsc(!isAsc)}>{ isAsc ? 'Asc' : 'Desc' }</button>
-        <ol>{ isAsc ? moves : moves.reverse() }</ol>
+        <ol reversed={!isAsc}>{ isAsc ? moves : moves.reverse() }</ol>
       </div>
     </div>
   )
