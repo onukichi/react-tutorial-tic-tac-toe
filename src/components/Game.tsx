@@ -68,10 +68,12 @@ function Board(props: BoardProps) {
   let status
   if(winner) {
     status = "Winner: " + winner.player
+  } else if(squares.filter(n => n === null).length === 0) {
+    status = "Draw"
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O")
   }
-
+  
   const boardView = []
   for(let i = 0; i < 3; i++) {
     const row = []
