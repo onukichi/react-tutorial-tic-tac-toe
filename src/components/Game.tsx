@@ -7,11 +7,12 @@ type SquareValue = 'O' | 'X' | null
 type SquareProps = {
   value: SquareValue
   onSquareClick: () => void
+  isWinnerSquare: boolean
 }
 
 function Square(props: SquareProps) {
-  const { value, onSquareClick } = props
-  return <button className="square" onClick={onSquareClick}>{ value }</button>;
+  const { value, onSquareClick, isWinnerSquare } = props
+  return <button className="square" onClick={onSquareClick} style={ isWinnerSquare ? { backgroundColor: 'yellow' } : {} }>{ value }</button>;
 }
 
 function calculateWinner(squares: BoardState) {
@@ -29,7 +30,10 @@ function calculateWinner(squares: BoardState) {
   for(let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
     if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a]
+      return {
+        player: squares[a],
+        line: [a, b, c]
+      }
     }
   }
   return null
@@ -63,7 +67,7 @@ function Board(props: BoardProps) {
   const winner = calculateWinner(squares)
   let status
   if(winner) {
-    status = "Winner: " + winner
+    status = "Winner: " + winner.player
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O")
   }
@@ -72,7 +76,7 @@ function Board(props: BoardProps) {
   for(let i = 0; i < 3; i++) {
     const row = []
     for(let j = 0; j < 3; j++) {
-      row.push(<Square key={i * 3 + j} value={squares[i * 3 + j]} onSquareClick={() => handleClick(i * 3 + j)} />)
+      row.push(<Square key={i * 3 + j} value={squares[i * 3 + j]} onSquareClick={() => handleClick(i * 3 + j)} isWinnerSquare={ winner ? winner.line.includes(i * 3 + j) : false } />)
     }
     boardView.push(<div key={i} className="board-row">{row}</div>)
   }
